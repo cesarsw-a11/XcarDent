@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Joabsonlg/odontograma.git"
+    "url": "https://github.com/cesarsw-a11/XcarDent"
   },
   "keywords": [
     "odontograma",
     "javascript"
   ],
-  "author": "Joabson Arley",
+  "author": "Cesar Meneses",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Joabsonlg/odontograma/issues"
