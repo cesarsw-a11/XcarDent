@@ -3,6 +3,13 @@ const botonGuardarNuevaOrden = `<button type="submit" class="btn btn-primary">Gu
 const botonGuardarCambios = `<button type="button" class="btn btn-primary" onclick="guardarCambiosEditar()">Guardar</button>`
 const botonCerrarModal = `<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>`
 const nombreFormulario = $("form").attr("id");
+const btnIrAntecedentes = `<button id="botonAntecedentes" type="button" class="btn btn-info" onclick="ui_abrirModalAntecedentes();" disabled>Ir a Antecedentes</button>`
+const btnRegresarDatosPaciente = `<button type="button" class="btn btn-info" onclick="ui_regresarDatosPaciente();">Regresar a datos del paciente</button>`
+const btnIrEnfermedades = `<button id="siguiente" type="button" class="btn btn-info" onclick="ui_siguienteEnfermedades();" disabled >Siguiente</button>`
+const btnRegresarAntecedentes = `<button id="botonAntecedentes" type="button" class="btn btn-info" onclick="ui_abrirModalAntecedentes();">Regresar a Antecedentes</button>`
+const btnIrEnfermedadesGuardar = `<button id="siguiente" type="button" class="btn btn-info" onclick="ui_siguienteEnfermedadesGuardar();"  >Siguiente</button>`
+const btnIrAntecedentesGuardar = `<button id="botonAntecedentes" type="button" class="btn btn-info" onclick="ui_abrirModalAntecedentesGuardar();" >Ir a Antecedentes</button>`
+
 //Cargamos todo el javascript una vez que el DOM esta cargado
 $(document).ready(() => {
     //Inicializamos el datatable
@@ -12,11 +19,33 @@ $(document).ready(() => {
         e.preventDefault();
 
         var formData = new FormData(this);
+        var checkbox = $("#" + nombreFormulario).find("input[type=checkbox]");
+        $.each(checkbox, function(key, val) {
+            formData.append($(val).attr('name'), ($(this).is(':checked')) ? 1 : 0)
+        });
+        
         mandarFormulario(formData)
 
         return true;
     });
 });
+
+//Funcion para verificar que los inputs que esten con el atributo rquired lo cumplan
+function verificar(divInput){
+    let inputs = $(`#${divInput} :input`);
+    
+    for (let index = 0; index < inputs.length; index++) {
+        var i = 0;
+        if(inputs[index].value == "" && inputs[index].required){
+            alertify.alert("El campo "+inputs[index].placeholder+" es requerido.")
+            return false;
+        }
+    }
+    $("#botonAntecedentes").attr("disabled",false)
+    if(divInput == "antecedentes"){
+        $("#siguiente").attr("disabled",false)
+    }
+}
 
 function mandarFormulario(formData) {
     //En caso de que los datos sean llenados y esten correctos del lado del cliente se mandaran al backend para validarlos
@@ -61,15 +90,56 @@ function mandarFormulario(formData) {
 
 function ui_modalNuevaOrden() {
     limpiarCampos(nombreFormulario);
-    $(".modal-title").html("Agregar nueva Orden de Compra")
-    $(".modal-footer").html(botonGuardarNuevaOrden + botonCerrarModal)
+    $(".modal-title").html("Agregar Nuevo Paciente")
+    $(".modal-footer").html(btnIrAntecedentes)
+    $("#pacientes").css('display','block')
+    $("#enfermedades").css('display','none')
     $("#modalAgregarOrden").modal()
 
 }
+function ui_abrirModalAntecedentes() {
+    $(".modal-title").html("Comenzar historial clinico.")
+    $(".modal-footer").html(btnRegresarDatosPaciente + btnIrEnfermedades)
+    $("#antecedentes").css('display','block')
+    $("#pacientes").css('display','none')
+    $("#enfermedades").css('display','none')
+
+}
+
+function ui_abrirModalAntecedentesGuardar(){
+    $(".modal-title").html("Comenzar historial clinico.")
+    $(".modal-footer").html(btnRegresarDatosPaciente + btnIrEnfermedadesGuardar)
+    $("#antecedentes").css('display','block')
+    $("#pacientes").css('display','none')
+    $("#enfermedades").css('display','none') 
+}
+
+function ui_regresarDatosPaciente(){
+    $(".modal-title").html("Agregar Nuevo Paciente")
+    $("#antecedentes").css('display','none')
+    $("#pacientes").css('display','block')
+    $(".modal-footer").html(btnIrAntecedentes)
+}
+
+function ui_siguienteEnfermedades(){
+    $(".modal-title").html("Seguimiento historial clinico")
+    $("#antecedentes").css('display','none')
+    $("#enfermedades").css('display','block')
+    $(".modal-footer").html(btnRegresarAntecedentes + botonGuardarNuevaOrden)
+}
+function ui_siguienteEnfermedadesGuardar(){
+    $(".modal-title").html("Seguimiento historial clinico")
+    $("#antecedentes").css('display','none')
+    $("#enfermedades").css('display','block')
+    $(".modal-footer").html(btnRegresarAntecedentes + botonGuardarCambios)
+}
 
 function ui_modalEditarOrden(id_orden) {
-    $(".modal-footer").html(botonGuardarCambios + botonCerrarModal)
-    $(".modal-title").html("Editar Orden de Compra")
+    //$(".modal-footer").html(botonGuardarCambios + botonCerrarModal)
+    $(".modal-footer").html(btnIrAntecedentesGuardar)
+    $(".modal-title").html("Editar Paciente")
+    $("#pacientes").css('display','block')
+    $("#enfermedades").css('display','none')
     $("#modalAgregarOrden").modal()
     ui_obtenerOrden(id_orden)
 
@@ -83,27 +153,36 @@ function ui_obtenerOrden(id_orden) {
         success: function (response) {
             var data = JSON.parse(response)
             data = data.datos
-            $("#partida").val(data.partida)
-            $("#cantidad").val(data.cantidad)
-            $("#unidad").val(data.unidad)
-            $("#descripcion").val(data.descripcion)
-            $("#precioUnitario").val(data.precioUnitario)
-            $("#rFederal").val(data.rFederal)
-            $("#rEstatal").val(data.rEstatal)
-            $("#rFiscal").val(data.rFiscal)
-            $("#importe").val(data.importe)
-            $("#iva").val(data.iva)
-            $("#proveedor").val(data.proveedor)
-            $("#fecha").val(data.fecha)
-            $("#rfc").val(data.rfc)
-            $("#folioProveedor").val(data.folioProveedor)
-            $("#area").val(data.area)
-            $("#claveArea").val(data.claveArea)
-            $("#numeroOrden").val(data.numeroOrden)
-            $("#unidadOrden").val(data.unidadOrden)
-            $("#numeroRequisicion").val(data.numeroRequisicion)
-            $("#idOrden").val(data.idOrden)
-            $("#nota").val(data.nota)
+            $("#nombre").val(data.nombre)
+            $("#edad").val(data.edad)
+            $("#sexo").val(data.sexo)
+            $("#procedencia").val(data.procedencia)
+            $("#domicilio").val(data.domicilio)
+            $("#telefono").val(data.telefono)
+            $("#ocupacion").val(data.ocupacion)
+            $("#telefonoEmergencia").val(data.telefonoEmergencia)
+            $("#contactoEmergencia").val(data.contactoEmergencia)
+            $("#motivoConsulta").val(data.motivoConsulta)
+            $("#enfermedadesActuales").val(data.enfermedadesActuales)
+            $("#consumeMedicamento").val(data.consumeMedicamento)
+            $("#medicamentosConsume").val(data.medicamentosConsume)
+            $("#alergias").val(data.alergias)
+            $("#idPaciente").val(data.idPaciente)
+            $("#idHistoria").val(data.idHistoria)
+            //checkbox
+            var result = [];
+
+            for(var i in data){
+                result.push([i, data[i]])
+            }
+            var enfermedades = result.slice(19,57)
+            enfermedades.map((enfermedad)=>{
+                if(enfermedad[1] == 1 && enfermedad[1] !== null){
+                    $("#"+enfermedad[0]).prop("checked",true)
+                }else{
+                    $("#"+enfermedad[0]).prop("checked",false)
+                }
+            })
 
         },
         error: function (error, xhr, status) {
@@ -120,7 +199,7 @@ function ui_obtenerOrden(id_orden) {
 
 function descargarPDF(id_orden) {
 
-    window.location.href = base_url + "administrador/pdf/" + id_orden
+    window.location.href = base_url + "administrador/odontograma/" + id_orden
 
 }
 
@@ -178,6 +257,10 @@ function ui_modalEliminarOrden(id_orden) {
 function guardarCambiosEditar() {
     var table = $('#tabla_ordenes').DataTable();
     var formData = new FormData($("#" + nombreFormulario)[0])
+    var checkbox = $($("#" + nombreFormulario)[0]).find("input[type=checkbox]");
+        $.each(checkbox, function(key, val) {
+            formData.append($(val).attr('name'), ($(this).is(':checked')) ? 1 : 0)
+        });
     //En caso de que los datos sean llenados y esten correctos del lado del cliente se mandaran al backend para validarlos
     $.ajax({
         url: base_url + 'administrador/editarOrden',
@@ -220,10 +303,10 @@ function guardarCambiosEditar() {
 
 function listarOrdenes() {
     var columnas = [];
-    columnas.push({ "data": "idProducto" });
-    columnas.push({ "data": "partida" });
-    columnas.push({ "data": "descripcion" });
-    columnas.push({ "data": "importe" });
+    columnas.push({ "data": "idPaciente" });
+    columnas.push({ "data": "nombre" });
+    columnas.push({ "data": "domicilio" });
+    columnas.push({ "data": "telefono" });
     columnas.push({ "data": "acciones" });
 
     var table = $('#tabla_ordenes').DataTable({
@@ -240,9 +323,9 @@ function listarOrdenes() {
             "type": "POST",
             "dataSrc": function (json) {
                 for (var i = 0, ien = json.length; i < ien; i++) {
-                    json[i]['acciones'] = `<button class="btn btn-info" data-toggle="tooltip" title="Editar" onclick="ui_modalEditarOrden(${json[i].idProducto})"><i class="fa fa-pencil" ></i></button>
-                <button class="btn btn-danger" data-toggle="tooltip" title="Eliminar" onclick="ui_modalEliminarOrden(${json[i].idProducto})"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                <button class="btn btn-success" data-toggle="tooltip" title="Descargar PDF" onclick="descargarPDF(${json[i].idProducto})"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>`
+                    json[i]['acciones'] = `<button class="btn btn-info" data-toggle="tooltip" title="Editar" onclick="ui_modalEditarOrden(${json[i].idPaciente})"><i class="fa fa-pencil" ></i></button>
+                <button class="btn btn-danger" data-toggle="tooltip" title="Eliminar" onclick="ui_modalEliminarOrden(${json[i].idPaciente})"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                <button class="btn btn-success" data-toggle="tooltip" title="Odontograma" onclick="descargarPDF(${json[i].idPaciente})"><i class="fa fa-medkit" aria-hidden="true"></i></button>`
                 }
                 return json;
             }
@@ -256,16 +339,16 @@ function listarOrdenes() {
 function llenarTabla(response, tipoFormulario) {
     let data = response.data,
         table = $('#tabla_ordenes').DataTable(),
-        boton_editar = `<button class="btn btn-info" data-toggle="tooltip" title="Editar" onclick="ui_modalEditarOrden(${data.idProducto})"><i class="fa fa-pencil" ></i></button>
-        <button class="btn btn-danger" data-toggle="tooltip" title="Eliminar" onclick="ui_modalEliminarOrden(${data.idProducto})"><i class="fa fa-trash" aria-hidden="true"></i></button>
-        <button class="btn btn-success" data-toggle="tooltip" title="Descargar PDF" onclick="descargarPDF(${data.idProducto})"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>`,
+        boton_editar = `<button class="btn btn-info" data-toggle="tooltip" title="Editar" onclick="ui_modalEditarOrden(${data.idPaciente})"><i class="fa fa-pencil" ></i></button>
+        <button class="btn btn-danger" data-toggle="tooltip" title="Eliminar" onclick="ui_modalEliminarOrden(${data.idPaciente})"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        <button class="btn btn-success" data-toggle="tooltip" title="Odontograma" onclick="descargarPDF(${data.idPaciente})"><i class="fa fa-medkit" aria-hidden="true"></i></button>`,
         rowNode;
     //Agregamos la fila a la tabla
     rowNode = table.row.add({
-        "idProducto": data.idProducto,
-        "partida": data.partida,
-        "descripcion": data.descripcion,
-        "importe": data.importe,
+        "idPaciente": data.idPaciente,
+        "nombre": data.nombre,
+        "domicilio": data.domicilio,
+        "telefono": data.telefono,
         "acciones": boton_editar
     }).draw()
 

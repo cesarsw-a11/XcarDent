@@ -4,7 +4,7 @@
       <div class="container">
           <div class="row">
               <div class="col-md-8 col-sm-6 col-xs-12">
-                  <p class="copyright-text">&copy;2022 H. Ayuntamiento de La Huerta, Jalisco.
+                  <p class="copyright-text">&copy;2022 XcarDent.
                   </p>
               </div>
 

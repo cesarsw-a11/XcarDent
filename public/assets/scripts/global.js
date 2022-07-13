@@ -4,6 +4,8 @@ function limpiarCampos(nombreFormulario) {
     let tipoFormulario = $("#formulario").val()
     $("#genero").val("-1")
     $("#" + nombreFormulario).find($('input')).val('')
+    $("#" + nombreFormulario).find($('textarea')).val('')
+    $("#" + nombreFormulario).find($('input[type=checkbox]')).prop("checked",false)
     $("#formulario").val(tipoFormulario)
 }
 
