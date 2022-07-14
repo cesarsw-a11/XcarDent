@@ -145,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 type : "POST",
                 data : {paciente : $("#paciente").val()},
                 url : base_url + "administrador/obtenerDientes",
+                async: false,
                 success : function(data){
                     
                     localStorage.clear()
@@ -988,11 +989,11 @@ document.addEventListener('DOMContentLoaded', () => {
         resizeCanvas()
         resizeCanvasPincel()
     })
-    window.onload = function() {  
+   /*  window.onload = function() {  
         if(window.location.hash !== '#loaded') {            
           window.location.hash = '#loaded';
           window.location.reload();
         }
-      } 
+      }  */
     iniciaOdontograma()
 })
