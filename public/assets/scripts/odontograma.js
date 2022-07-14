@@ -756,12 +756,12 @@ document.addEventListener('DOMContentLoaded', () => {
      * Redimensiona os canvas do odontograma e seu conteúdo proporcionalmente ao tamanho da janela.
      */
     const resizeCanvas = () => {
-        if (window.innerWidth >= 800) {
+        /* if (window.innerWidth >= 800) {
             document.querySelector("#canva-group").style.display = 'display'
         } else {
             alert("¡PANTALLA MUY PEQUEÑA! ¡Acceda al odontograma a través de un dispositivo con una pantalla más grande!")
             document.querySelector("#canva-group").style.display = 'none'
-        }
+        } */
 
         camada1.width = camada2.width = camada3.width = camada4.width = window.innerWidth - 25
         const altura = (camada1.width * alturaTelaReferencia) / tamanhoTelaReferencia
@@ -876,9 +876,9 @@ document.addEventListener('DOMContentLoaded', () => {
             success : function(data){
                 data = JSON.parse(data)
                 //console.log(data)
-
+                let imagen = (data) ? data.imagen : ''
                 desenho = new Image();
-                desenho.src = data.imagen;
+                desenho.src = imagen;
                 desenho.onload = function() {
                     contextoPincel.clearRect(0, 0, camadaPincel.width, camadaPincel.height)
                     contextoPincel.drawImage(desenho, 0, 0, camadaPincel.width, camadaPincel.height);
@@ -988,6 +988,11 @@ document.addEventListener('DOMContentLoaded', () => {
         resizeCanvas()
         resizeCanvasPincel()
     })
-
+    window.onload = function() {  
+        if(window.location.hash !== '#loaded') {            
+          window.location.hash = '#loaded';
+          window.location.reload();
+        }
+      } 
     iniciaOdontograma()
 })

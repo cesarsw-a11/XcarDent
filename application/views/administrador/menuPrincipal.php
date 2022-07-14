@@ -1,4 +1,5 @@
 <?php $this->load->view('head'); ?>
+<?php $this->load->view('header'); ?>
 <link rel="stylesheet" href="<?= base_url("estilos/admin.css") ?>">
 <!-- Modal Datos Paciente -->
 <div class="modal fade" id="modalAgregarOrden" data-backdrop="static" data-keyboard="false">

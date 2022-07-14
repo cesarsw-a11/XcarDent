@@ -6,9 +6,9 @@
             <div class="card border-0 shadow rounded-3 my-5">
                 <div class="card-body p-4 p-sm-5">
                     <div>
-                        <img class="rounded mx-auto d-block" src="<?= base_url("imagenes/logo_administracion.png") ?>" alt="H. Ayuntamiento">
+                        <img class="rounded mx-auto d-block" src="<?= base_url("imagenes/logo_dental.png") ?>" alt="H. Ayuntamiento">
                     </div>
-                    <h5 class="card-title text-center mb-5 fw-light fs-5">Sistema de Compras</h5>
+                    <h5 class="card-title text-center mb-5 fw-light fs-5">XcarDent - Odontología Integral</h5>
                     <form id="login-form">
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control" id="usuario" placeholder="name@example.com">

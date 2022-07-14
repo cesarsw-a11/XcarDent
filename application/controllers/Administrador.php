@@ -81,7 +81,7 @@ class Administrador extends CI_Controller
 
                     $datos['idHistoriaClinica'] = $idHistoriaClinica;
                     if ($this->db->insert('antecedentesPaciente', $datos)) {
-                        $caraDiente = 1;
+                       /*  $caraDiente = 1;
                         $contador = 1;
                         while ($contador < 6) {
 
@@ -99,13 +99,12 @@ class Administrador extends CI_Controller
                                 $this->db->insert('odontograma', $datosOdontograma);
                             }
                             $contador++;
-                        }
-                        if ($this->db->insert('odontograma', $datosOdontograma)) {
+                        } */
                             $respuesta['insertado'] = 1;
                             $respuesta['mensaje'] = "La orden se ha guardado correctamente.";
                             $respuesta['data'] = $datosCompra;
                             $respuesta['data']['idPaciente'] = $idPaciente;
-                        }
+                        
                     }
                 }
             }
