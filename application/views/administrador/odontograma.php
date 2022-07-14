@@ -16,7 +16,7 @@
 
 <body class="dark-mode">
     <div id="control" class="container">
-        <h1 style="text-align: center;align-items: center;">ODONTOGRAMA : <?= $nombre ?></h1>
+        <h1 style="text-align: center;align-items: center;"><a href="<?= base_url("administrador")?>"><button class="btn btn-success">Regresar</button></a>ODONTOGRAMA : <?= $nombre ?></h1>
         <input type="text" id="paciente" value="<?= $idPaciente ?>" hidden>
         <!-- <div class="row">
             <div class="col-sm">
